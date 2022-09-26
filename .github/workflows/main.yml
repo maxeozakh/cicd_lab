@@ -1,0 +1,10 @@
+name: lets get that done
+run-name: ${{ github.actor }} push some code and now here we are
+on: [push]
+jobs:
+  gha-lab:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "oh hello there"
+      - name: pull repo
+        uses: actions/checkout@v3
