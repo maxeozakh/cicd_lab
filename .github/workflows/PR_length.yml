@@ -1,0 +1,10 @@
+name: stop create PR with 1k lines thx 
+run-name: ${{ github.actor }} push some code and here we are
+on: [pull_request]
+jobs:
+  gha-lab:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🌊 hello there"
+      - name: pull repo
+        uses: actions/checkout@v3
