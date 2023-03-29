@@ -1,6 +1,6 @@
 ## 1. Focus on Business Logic:
 
-Our primary goal is to test the business logic of our application. This includes testing specific system parts such as RTK slices, Redux action-reducer pairs, **non-trivial** selectors, adapters, helpers, and utilities crucial to the application's functionality.
+Our primary goal is to test the business logic of our application. This includes testing specific system parts such as RTK slices, Redux action-reducer pairs, **non-trivial** selectors, adapters, helpers, and utilities.
 
 Conversely, trivial selectors and other simple functions may not require testing. For example, If a selector retrieves the current user's information from the state, such as `getCurrentUser(state)`, it may not require testing as it only returns data directly from the state without any additional processing.
 
