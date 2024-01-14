@@ -1,10 +1,45 @@
-name: lets get that done
-run-name: ${{ github.actor }} push some code and now here we are
+name: main yml 3000
+run-name: ${{ github.actor }} run
 on: [push]
 jobs:
-  gha-lab:
+  find-pr:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - run: echo "oh hello there"
-      - name: pull repo
-        uses: actions/checkout@v3
+      - name: PR TO DRAFT
+        id: PR_TO_DRAFT
+        run: |
+          PR_NUMBER=$(curl -H "Authorization: token $GITHUB_TOKEN" \
+                          -H "Accept: application/vnd.github.v3+json" \
+                          "https://api.github.com/repos/${{ github.repository }}/pulls?state=open&head=${{ github.repository_owner }}:${{ github.ref_name }}" \
+                          | jq -r '.[0].number')
+          echo "::set-output name=pr_number::$PR_NUMBER"
+          echo "The PR number is $PR_NUMBER"
+          if [ ! -z "$PR_NUMBER" ]; then
+            RESPONSE=$(curl -L \
+                            -X PATCH \
+                            -H "Accept: application/vnd.github+json" \
+                            -H "Authorization: token $GITHUB_TOKEN" \
+                            -H "X-GitHub-Api-Version: 2022-11-28" \
+                            "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" \
+                            -d '{"draft": true, "title": "test 21323"}')
+            echo "RESPONSE -> \n$RESPONSE"
+          else
+            echo "No matching pull request found."
+          fi
+    # steps:
+    #   - name: Find Pull Request number
+    #     id: find-pr
+    #     run: |
+    #       PR_NUMBER=$(curl -H "Authorization: token $GITHUB_TOKEN" \
+    #                       -H "Accept: application/vnd.github.v3+json" \
+    #                       "https://api.github.com/repos/${{ github.repository }}/pulls?state=open&head=${{ github.repository_owner }}:${{ github.ref_name }}" \
+    #                       | jq '.[0].number')
+    #       echo "::set-output name=pr_number::$PR_NUMBER"
+    #       echo "The PR number is $PR_NUMBER"
+    #       RESPONSE=$(curl -X PATCH -i -H "Authorization: token $GITHUB_TOKEN" \
+    #                       -H "Content-Type: application/json" \
+    #                       -d '{"draft": true}' \
+    #                       "https://api.github.com/repos/maxeozakh/cicd_lab/pulls/$PR_NUMBER")
+    #       echo "RESPONSE -> \n$RESPONSE"
